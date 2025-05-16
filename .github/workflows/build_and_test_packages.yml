@@ -46,8 +46,8 @@ jobs:
           echo "Cache not found ❌"
         fi
 
-    - name: Build
-      run: swift build -v
+    # - name: Build
+    #   run: swift build -v
 
     - name: Run tests
       run: swift test --parallel -v
