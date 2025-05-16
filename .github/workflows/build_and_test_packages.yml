@@ -1,4 +1,4 @@
-name: Swift Pakcage Manager
+name: Swift Package Manager
 
 on:
   push:
@@ -18,11 +18,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Setup Swift
       uses: fwal/setup-swift@v2
       with:
         swift-version: ${{ inputs.swift-version }}
+
+    - name: Cache Swift Build
+      uses: actions/cache@v3
+      with:
+        path: |
+          .build
+          .swiftpm
+        key: SPM-${{ runner.os }}-swift-${{ inputs.swift-version }}-${{ hashFiles('Package.resolved') }}
+        restore-keys: |
+          SPM-${{ runner.os }}-swift-${{ inputs.swift-version }}-
+
     - name: Build
       run: swift build -v
+
     - name: Run tests
       run: swift test -v
