@@ -24,6 +24,9 @@ jobs:
       with:
         swift-version: ${{ inputs.swift-version }}
 
+    - name: Generate Package.resolved (if missing)
+      run: swift package resolve
+
     - name: Cache Swift Build
       uses: actions/cache@v3
       with:
@@ -33,6 +36,15 @@ jobs:
         key: SPM-${{ runner.os }}-swift-${{ inputs.swift-version }}-${{ hashFiles('Package.resolved') }}
         restore-keys: |
           SPM-${{ runner.os }}-swift-${{ inputs.swift-version }}-
+          SPM-${{ runner.os }}-
+
+    - name: Cache Status Check
+      run: |
+        if [ -d ".build" ]; then
+          echo "Cache restored successfully ✅"
+        else
+          echo "Cache not found ❌"
+        fi
 
     - name: Build
       run: swift build -v
