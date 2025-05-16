@@ -1,0 +1,28 @@
+name: Swift Pakcage Manager
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "develop" ]
+  workflow_call:
+    inputs:
+      swift-version:
+        required: false
+        type: string
+        default: '6.0.0'
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Swift
+      uses: fwal/setup-swift@v2
+      with:
+        swift-version: ${{ inputs.swift-version }}
+    - name: Build
+      run: swift build -v
+    - name: Run tests
+      run: swift test -v
